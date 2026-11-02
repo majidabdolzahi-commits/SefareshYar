@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ffffff">
+<title>سفارش‌یار</title>
+<style>
+:root{--green:#18865b;--pale:#eaf6f0;--ink:#202923;--muted:#7a857e;--line:#e8ede9;--bg:#f7f9f7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:760px;margin:auto;min-height:100vh;background:#fff;padding-bottom:82px}
+.top{padding:22px 18px 12px;background:#fff;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;justify-content:space-between}.brand h1{font-size:21px;margin:0}
+.brand small{color:var(--muted);display:block;margin-top:5px;font-size:12px}
+.badge{background:var(--pale);color:var(--green);padding:8px 12px;border-radius:20px;font-size:12px}
+.search{margin-top:16px;display:flex;gap:8px}.search input{width:100%;border:1px solid var(--line);background:#f7f9f7;border-radius:13px;padding:13px;outline:none}
+.section{padding:12px 16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sectionhead h2{font-size:16px;margin:0}.muted{font-size:12px;color:var(--muted)}
+.chips{display:flex;gap:8px;overflow:auto;padding-bottom:6px}.chip{white-space:nowrap;background:#f3f6f4;color:#526057;border-radius:22px;padding:9px 13px;font-size:12px}
+.chip.active{background:var(--green);color:#fff}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.photo{height:124px;background:#f0f4f1;display:flex;align-items:center;justify-content:center;color:#aab5ae;font-size:38px;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}.cardbody{padding:10px}
+.pname{font-size:13px;font-weight:bold;min-height:20px;line-height:1.6}.price{font-size:12px;color:var(--green);margin:7px 0 9px}
+.add{background:var(--pale);color:var(--green);width:100%;padding:9px;border-radius:10px;font-size:12px;font-weight:bold}
+.empty{text-align:center;color:var(--muted);padding:35px 10px;font-size:13px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10}
+.navinner{width:100%;max-width:760px;display:flex}.nav button{flex:1;background:white;color:var(--muted);padding:12px 4px 10px;font-size:11px}
+.nav button.active{color:var(--green);font-weight:bold}.nav b{display:block;font-size:20px;margin-bottom:4px}
+.fab{position:fixed;bottom:88px;left:20px;background:var(--green);color:#fff;border-radius:28px;padding:13px 18px;box-shadow:0 5px 18px #18865b44;font-weight:bold}
+.hidden{display:none!important}.panel{padding:16px}.form{display:grid;gap:11px}
+.form label{font-size:12px;color:#59665e}.form input,.form select{display:block;width:100%;margin-top:6px;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fff;outline:none}
+.primary{background:var(--green);color:white;padding:13px;border-radius:12px;font-weight:bold}
+.secondary{background:var(--pale);color:var(--green);padding:11px;border-radius:11px}
+.row{display:flex;gap:9px;align-items:center}.row>*{flex:1}
+.listrow{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}
+.thumb{width:54px;height:54px;border-radius:10px;object-fit:cover;background:#f1f4f2}.grow{flex:1}
+.qty{display:flex;align-items:center;gap:10px}.qty button{background:var(--pale);color:var(--green);width:28px;height:28px;border-radius:8px;font-weight:bold}
+.total{background:#f5f8f6;padding:14px;border-radius:13px;margin:14px 0;display:flex;justify-content:space-between;font-weight:bold}
+.modal{position:fixed;inset:0;background:#0007;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:760px;border-radius:22px 22px 0 0;padding:20px;max-height:90vh;overflow:auto}
+.sheet h3{margin:0 0 15px}.close{float:left;background:#f1f4f2;border-radius:50%;width:30px;height:30px}
+.hint{font-size:11px;color:var(--muted);line-height:1.8}
+.importbox{background:#f7faf8;border:1px solid var(--line);padding:12px;border-radius:13px;margin:12px 0}
+.importbox button{margin:4px 0}.status{font-size:12px;line-height:1.9;margin-top:8px;white-space:pre-line}
+.dategrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.subhead{font-size:14px;font-weight:bold;margin:18px 0 10px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><div><h1>سفارش‌یار</h1><small>مدیریت سریع سفارش‌های فروشگاه</small></div><span class="badge">آفلاین • ریال</span></div>
+  <div class="search"><input id="search" placeholder="جست‌وجوی نام کالا..."></div>
+</header>
+
+<main id="home">
+  <section class="section"><div class="sectionhead"><h2>دسته‌بندی کالاها</h2><span class="muted" id="count">۰ کالا</span></div><div class="chips" id="categories"></div></section>
+  <section class="section"><div class="sectionhead"><h2 id="productsTitle">همه کالاها</h2><span class="muted">برای افزودن لمس کنید</span></div><div class="grid" id="products"></div><div id="noProducts" class="empty">هنوز کالایی ثبت نشده است.<br>از دکمه «افزودن کالا» شروع کنید.</div></section>
+</main>
+
+<main id="cartPage" class="hidden">
+<section class="panel">
+  <div class="sectionhead"><h2>سبد سفارش</h2><span class="muted" id="cartCount">۰ قلم</span></div>
+  <div class="form">
+    <label>نام مشتری<input id="customer" placeholder="نام مشتری"></label>
+    <label>شماره تماس<input id="phone" inputmode="tel" placeholder="شماره تماس (اختیاری)"></label>
+    <label>آدرس مشتری<input id="address" placeholder="آدرس کامل مشتری (اختیاری)"></label>
+    <div class="dategrid">
+      <label>تاریخ فاکتور (شمسی)<input id="invoiceDate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۸/۱۱" maxlength="10"></label>
+      <label>تاریخ تسویه (شمسی)<input id="settlementDate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۸/۱۱" maxlength="10"></label>
+    </div>
+    <label>مبلغ پرداخت‌شده (ریال)<input id="paidAmount" type="number" min="0" inputmode="numeric" placeholder="در صورت پرداخت، مبلغ را وارد کنید"></label>
+  </div>
+  <div id="cartItems"></div><div class="total"><span>مبلغ کل</span><span id="grandTotal">۰ ریال</span></div>
+  <label class="muted">توضیحات سفارش<input id="note" placeholder="توضیحات (اختیاری)"></label>
+  <button class="primary" style="width:100%;margin-top:14px" onclick="saveOrder()">ثبت و ذخیره سفارش</button>
+</section>
+</main>
+
+<main id="managePage" class="hidden">
+<section class="panel">
+  <div class="sectionhead"><h2>مدیریت کالاها</h2><button class="secondary" onclick="openProductForm()">＋ افزودن کالا</button></div>
+  <p class="hint">نام، تصویر، قیمت و دسته‌بندی هر کالا را ثبت کنید. قیمت‌ها هر زمان قابل ویرایش‌اند.</p>
+  <div class="importbox">
+    <b>ورود گروهی کالاها از فایل CSV</b>
+    <p class="hint">برای ثبت تعداد زیادی کالا، فایل نمونه را دریافت کنید، اطلاعات را در Excel وارد و با فرمت CSV ذخیره کنید؛ سپس فایل را از اینجا انتخاب کنید.</p>
+    <div class="row">
+      <button class="primary" onclick="$('importFile').click()">📥 انتخاب فایل و ورود کالاها</button>
+      <button class="secondary" onclick="downloadTemplate()">📄 فایل نمونه</button>
+    </div>
+    <input id="importFile" type="file" accept=".csv,text/csv" hidden>
+    <div id="importStatus" class="status" aria-live="polite"></div>
+  </div>
+  <div id="manageList"></div>
+</section>
+</main>
+
+<main id="ordersPage" class="hidden"><section class="panel"><div class="sectionhead"><h2>سفارش‌های ذخیره‌شده</h2><span class="muted" id="ordersCount"></span></div><div id="ordersList"></div></section></main>
+<main id="customersPage" class="hidden"><section class="panel">
+  <div class="sectionhead"><h2>مدیریت مشتریان</h2><span class="muted" id="customersCount"></span></div>
+  <form id="customerForm" class="form">
+    <input type="hidden" id="customerEditId">
+    <label>نام مشتری<input id="customerName" required placeholder="نام و نام خانوادگی / نام فروشگاه"></label>
+    <label>شماره تلفن<input id="customerPhone" inputmode="tel" placeholder="شماره تماس"></label>
+    <label>آدرس مشتری<input id="customerAddress" placeholder="آدرس کامل"></label>
+    <div class="row"><button class="primary" type="submit">ذخیره مشتری</button><button class="secondary" type="button" onclick="resetCustomerForm()">پاک‌کردن فرم</button></div>
+  </form><div id="customersList" style="margin-top:16px"></div>
+</section></main>
+
+<button class="fab" id="fab" onclick="openProductForm()">＋ افزودن کالا</button>
+<nav class="nav"><div class="navinner">
+  <button class="active" data-page="home" onclick="showPage('home',this)"><b>⌂</b>کالاها</button>
+  <button data-page="cartPage" onclick="showPage('cartPage',this)"><b>🛒</b>سبد <span id="navCart">۰</span></button>
+  <button data-page="managePage" onclick="showPage('managePage',this)"><b>＋</b>مدیریت</button>
+  <button data-page="ordersPage" onclick="showPage('ordersPage',this)"><b>▤</b>سفارش‌ها</button>
+  <button data-page="customersPage" onclick="showPage('customersPage',this)"><b>♙</b>مشتریان</button>
+</div></nav>
+</div>
+
+<div id="modal" class="modal hidden"><div class="sheet">
+  <button class="close" onclick="closeModal()">×</button><h3 id="modalTitle">افزودن کالا</h3>
+  <form class="form" id="productForm">
+    <input type="hidden" id="editId">
+    <label>نام کالا<input id="pname" required placeholder="مثلاً شیر کم‌چرب"></label>
+    <label>قیمت فروش فعلی (ریال)<input id="pprice" required type="number" min="0" inputmode="numeric" placeholder="قیمت فروش فعلی"></label>
+    <label>قیمت مصرف‌کننده (ریال)<input id="pretail" type="number" min="0" inputmode="numeric" placeholder="قیمت مصرف‌کننده"></label>
+    <div class="row">
+      <label>تعداد در هر بسته<input id="ppack" type="number" min="0" inputmode="numeric" placeholder="مثلاً ۶"></label>
+      <label>تعداد در هر کارتن<input id="pcarton" type="number" min="0" inputmode="numeric" placeholder="مثلاً ۲۴"></label>
+    </div>
+    <div class="row">
+      <label>واحد فروش<select id="punit"><option value="عدد">عدد</option><option value="کیلوگرم">کیلوگرم</option><option value="گرم">گرم</option><option value="بسته">بسته</option><option value="لیتر">لیتر</option></select></label>
+      <label>دسته‌بندی<input id="pcat" list="catOptions" placeholder="مثلاً لبنیات"><datalist id="catOptions"><option>لبنیات</option><option>نوشیدنی</option><option>تنقلات</option><option>مواد غذایی</option><option>شوینده</option><option>بهداشتی</option><option>سایر</option></datalist></label>
+    </div>
+    <label>تصویر کالا<input id="pimage" type="file" accept="image/*"></label>
+    <div id="imagePreview" class="hint"></div><button class="primary" type="submit">ذخیره کالا</button>
+  </form>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let products=JSON.parse(localStorage.getItem('sy_products')||'[]');
+let cart=JSON.parse(localStorage.getItem('sy_cart')||'{}');
+let orders=JSON.parse(localStorage.getItem('sy_orders')||'[]');
+let customers=JSON.parse(localStorage.getItem('sy_customers')||'[]');
+let activeCat='همه',pendingImage='';
+const money=n=>Number(n||0).toLocaleString('fa-IR')+' ریال';
+const digits=n=>Number(n||0).toLocaleString('fa-IR');
+const save=()=>{localStorage.setItem('sy_products',JSON.stringify(products));localStorage.setItem('sy_cart',JSON.stringify(cart));localStorage.setItem('sy_orders',JSON.stringify(orders));localStorage.setItem('sy_customers',JSON.stringify(customers));};
+
+function showPage(id,btn){
+  ['home','cartPage','managePage','ordersPage','customersPage'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  $('fab').classList.toggle('hidden',id!=='home');
+  if(id==='home')renderProducts();if(id==='cartPage')renderCart();if(id==='managePage')renderManage();if(id==='ordersPage')renderOrders();if(id==='customersPage')renderCustomers();
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderProducts(){
+  let cats=['همه',...new Set(products.map(p=>p.cat||'سایر'))];
+  $('categories').innerHTML=cats.map(c=>`<button class="chip ${activeCat===c?'active':''}" onclick="activeCat=${JSON.stringify(c)};renderProducts()">${esc(c)}</button>`).join('');
+  let q=$('search').value.trim().toLowerCase();
+  let arr=products.filter(p=>(activeCat==='همه'||(p.cat||'سایر')===activeCat)&&String(p.name).toLowerCase().includes(q));
+  $('count').textContent=digits(products.length)+' کالا';$('productsTitle').textContent=activeCat==='همه'?'همه کالاها':activeCat;
+  $('products').innerHTML=arr.map(p=>`<article class="card"><div class="photo">${p.image?`<img src="${p.image}" alt="">`:'🛍️'}</div><div class="cardbody"><div class="pname">${esc(p.name)}</div><div class="price">${money(p.price)} / ${esc(p.unit)}</div><button class="add" onclick="addToCart('${p.id}')">＋ افزودن به سفارش</button></div></article>`).join('');
+  $('noProducts').classList.toggle('hidden',arr.length>0);
+}
+function openProductForm(id=''){
+  let p=products.find(x=>x.id===id);$('productForm').reset();$('editId').value=p?.id||'';
+  $('pname').value=p?.name||'';$('pprice').value=p?.price||'';$('pretail').value=p?.retailPrice??'';$('ppack').value=p?.packQty??'';$('pcarton').value=p?.cartonQty??'';$('punit').value=p?.unit||'عدد';$('pcat').value=p?.cat||'';
+  pendingImage=p?.image||'';$('imagePreview').textContent=p?.image?'تصویر فعلی حفظ می‌شود؛ برای جایگزینی تصویر جدید انتخاب کنید.':'';
+  $('modalTitle').textContent=p?'ویرایش کالا':'افزودن کالا';$('modal').classList.remove('hidden');
+}
+function closeModal(){$('modal').classList.add('hidden');}
+$('pimage').addEventListener('change',e=>{
+  let f=e.target.files[0];if(!f)return;
+  if(f.size>3*1024*1024){alert('حجم تصویر بیشتر از ۳ مگابایت است. لطفاً تصویر کوچک‌تری انتخاب کنید.');e.target.value='';return;}
+  let r=new FileReader();r.onload=()=>{pendingImage=r.result;$('imagePreview').textContent='تصویر انتخاب شد.'};r.readAsDataURL(f);
+});
+$('productForm').addEventListener('submit',e=>{
+  e.preventDefault();let id=$('editId').value||String(Date.now());let old=products.find(p=>p.id===id);
+  let p={id,name:$('pname').value.trim(),price:Number($('pprice').value),retailPrice:Number($('pretail').value||0),packQty:Number($('ppack').value||0),cartonQty:Number($('pcarton').value||0),unit:$('punit').value,cat:$('pcat').value.trim()||'سایر',image:pendingImage||old?.image||''};
+  if(old)products=products.map(x=>x.id===id?p:x);else products.unshift(p);
+  save();closeModal();renderProducts();renderManage();
+});
+function addToCart(id){cart[id]=(cart[id]||0)+1;save();updateCartBadge();}
+function updateCartBadge(){let n=Object.values(cart).reduce((a,b)=>a+b,0);$('navCart').textContent=digits(n);}
+function changeQty(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];save();renderCart();updateCartBadge();}
+function renderCart(){
+  let entries=Object.entries(cart).filter(([id,q])=>products.some(p=>p.id===id)&&q>0);
+  $('cartCount').textContent=digits(entries.reduce((s,[i,q])=>s+q,0))+' قلم';let total=0;
+  $('cartItems').innerHTML=entries.map(([id,q])=>{let p=products.find(x=>x.id===id),sum=p.price*q;total+=sum;return `<div class="listrow"><div class="grow"><b>${esc(p.name)}</b><div class="muted">${money(p.price)} × ${digits(q)} ${esc(p.unit)}</div></div><div class="qty"><button onclick="changeQty('${id}',-1)">−</button>${digits(q)}<button onclick="changeQty('${id}',1)">+</button></div><b>${money(sum)}</b></div>`}).join('')||'<div class="empty">سبد سفارش خالی است.</div>';
+  $('grandTotal').textContent=money(total);
+}
+function saveOrder(){
+  let items=Object.entries(cart).filter(([id,q])=>q>0&&products.some(p=>p.id===id)).map(([id,q])=>{let p=products.find(x=>x.id===id);return {name:p.name,price:p.price,retailPrice:p.retailPrice||0,packQty:p.packQty||0,cartonQty:p.cartonQty||0,unit:p.unit,qty:q,total:p.price*q};});
+  if(!items.length){alert('سبد سفارش خالی است.');return;}
+  let total=items.reduce((s,x)=>s+x.total,0);
+  let cname=$('customer').value.trim()||'مشتری', cphone=$('phone').value.trim(), caddress=$('address').value.trim();
+  let known=customers.find(c=>(c.name||'').trim().toLowerCase()===cname.toLowerCase());
+  if(known){known.phone=cphone||known.phone;known.address=caddress||known.address;}else if(cname!=='مشتری'){customers.unshift({id:'c'+Date.now(),name:cname,phone:cphone,address:caddress});}
+  let paid=Math.max(0,Math.min(total,Number($('paidAmount').value||0)));
+  orders.unshift({id:Date.now(),date:new Date().toLocaleString('fa-IR'),invoiceDate:normalizeJalaliDate($('invoiceDate').value),settlementDate:normalizeJalaliDate($('settlementDate').value),customer:cname,phone:cphone,address:caddress,note:$('note').value.trim(),paid,balance:total-paid,items,total});
+  cart={};$('customer').value='';$('phone').value='';$('address').value='';$('note').value='';$('paidAmount').value='';$('invoiceDate').value=jalaliToday();$('settlementDate').value='';save();updateCartBadge();renderCart();alert('سفارش با موفقیت ذخیره شد.');
+}
+function renderManage(){
+  $('manageList').innerHTML=products.map(p=>`<div class="listrow">${p.image?`<img class="thumb" src="${p.image}" alt="">`:'<div class="thumb" style="display:grid;place-items:center">🛍️</div>'}<div class="grow"><b>${esc(p.name)}</b><div class="muted">${money(p.price)} • مصرف‌کننده: ${money(p.retailPrice||0)} • بسته: ${digits(p.packQty||0)} • کارتن: ${digits(p.cartonQty||0)} • ${esc(p.cat)}</div></div><button class="secondary" onclick="openProductForm('${p.id}')">ویرایش</button><button class="secondary" onclick="deleteProduct('${p.id}')">حذف</button></div>`).join('')||'<div class="empty">هنوز کالایی ثبت نشده است.</div>';
+}
+function deleteProduct(id){if(confirm('این کالا حذف شود؟')){products=products.filter(p=>p.id!==id);delete cart[id];save();renderManage();renderProducts();updateCartBadge();}}
+function renderOrders(){
+  $('ordersCount').textContent=digits(orders.length)+' سفارش';
+  $('ordersList').innerHTML=orders.map(o=>`<div class="listrow" style="display:block"><div class="sectionhead"><b>${esc(o.customer)}</b><b>${money(o.total)}</b></div><div class="muted">ثبت: ${esc(o.date)}${o.invoiceDate?' • فاکتور: '+esc(o.invoiceDate):''}${o.settlementDate?' • تسویه: '+esc(o.settlementDate):''}${o.phone?' • '+esc(o.phone):''}<br>${o.address?'آدرس: '+esc(o.address)+'<br>':''}پرداخت: ${money(o.paid||0)} • مانده: ${money(o.balance??(o.total-(o.paid||0)))}</div><details style="margin-top:9px"><summary class="muted">جزئیات سفارش (${digits(o.items.length)} کالا)</summary>${o.items.map(i=>`<div class="muted" style="padding:5px 0">${esc(i.name)} — ${digits(i.qty)} ${esc(i.unit)} — ${money(i.total)}${i.retailPrice?' • مصرف‌کننده: '+money(i.retailPrice):''}${i.packQty?' • بسته: '+digits(i.packQty):''}${i.cartonQty?' • کارتن: '+digits(i.cartonQty):''}</div>`).join('')}${o.note?`<div class="muted">توضیحات: ${esc(o.note)}</div>`:''}</details></div>`).join('')||'<div class="empty">هنوز سفارشی ذخیره نشده است.</div>';
+}
+
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+$('invoiceDate').value=jalaliToday();
+function resetCustomerForm(){$('customerForm').reset();$('customerEditId').value='';}
+$('customerForm').addEventListener('submit',e=>{e.preventDefault();const id=$('customerEditId').value||'c'+Date.now();const item={id,name:$('customerName').value.trim(),phone:$('customerPhone').value.trim(),address:$('customerAddress').value.trim()};const old=customers.some(c=>c.id===id);customers=old?customers.map(c=>c.id===id?item:c):[item,...customers];save();resetCustomerForm();renderCustomers();alert('اطلاعات مشتری ذخیره شد.');});
+function renderCustomers(){ $('customersCount').textContent=digits(customers.length)+' مشتری'; $('customersList').innerHTML=customers.map(c=>`<div class="listrow"><div class="grow"><b>${esc(c.name)}</b><div class="muted">${esc(c.phone||'بدون شماره')}<br>${esc(c.address||'بدون آدرس')}</div></div><button class="secondary" onclick="editCustomer('${c.id}')">ویرایش</button><button class="secondary" onclick="deleteCustomer('${c.id}')">حذف</button></div>`).join('')||'<div class="empty">هنوز مشتری‌ای ثبت نشده است. مشتریان هنگام ثبت سفارش نیز ذخیره می‌شوند.</div>'; }
+function editCustomer(id){const c=customers.find(x=>x.id===id);if(!c)return;$('customerEditId').value=c.id;$('customerName').value=c.name;$('customerPhone').value=c.phone||'';$('customerAddress').value=c.address||'';window.scrollTo({top:0,behavior:'smooth'});}
+function deleteCustomer(id){if(confirm('این مشتری حذف شود؟')){customers=customers.filter(c=>c.id!==id);save();renderCustomers();}}
+
+/* ورود گروهی CSV: ستون‌ها به ترتیب نام کالا، قیمت، واحد، دسته‌بندی هستند. */
+function normalizeDigits(value){
+  return String(value??'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٬,،]/g,'').trim();
+}
+function parseCSV(text){
+  text=text.replace(/^\uFEFF/,'');
+  const rows=[];let row=[],field='',quoted=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i],next=text[i+1];
+    if(ch==='"'&&quoted&&next==='"'){field+='"';i++;}
+    else if(ch==='"'){quoted=!quoted;}
+    else if(ch===','&&!quoted){row.push(field);field='';}
+    else if((ch==='\n'||ch==='\r')&&!quoted){
+      if(ch==='\r'&&next==='\n')i++;
+      row.push(field);if(row.some(v=>v.trim()!==''))rows.push(row);
+      row=[];field='';
+    }else field+=ch;
+  }
+  row.push(field);if(row.some(v=>v.trim()!==''))rows.push(row);
+  return rows;
+}
+function downloadTemplate(){
+  const csv='\uFEFFنام کالا,قیمت فروش فعلی,قیمت مصرف‌کننده,تعداد در بسته,تعداد در کارتن,واحد,دسته‌بندی\r\nشیر کم‌چرب,85000,95000,6,24,عدد,لبنیات\r\nآب معدنی,20000,25000,6,24,بطری,نوشیدنی\r\n';
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='نمونه-ورود-کالاها.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function importCSV(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const rows=parseCSV(String(reader.result||''));
+      if(rows.length<2){$('importStatus').textContent='فایل خالی است یا ردیف کالایی ندارد.';return;}
+      const header=rows.shift().map(x=>x.trim().toLowerCase());
+      const aliases={
+        name:['نام کالا','نام','کالا','name','product','product name'],
+        price:['قیمت','قیمت به ریال','قیمت (ریال)','price'],
+        unit:['واحد','واحد فروش','unit'],
+        cat:['دسته‌بندی','دسته بندی','گروه','category','cat'],
+        retail:['قیمت مصرف‌کننده','قیمت مصرف کننده','retail price'],pack:['تعداد در بسته','تعداد بسته','pack qty'],carton:['تعداد در کارتن','تعداد کارتن','carton qty']
+      };
+      const indexes={};
+      Object.keys(aliases).forEach(key=>indexes[key]=header.findIndex(h=>aliases[key].includes(h)));
+      if(indexes.name<0||indexes.price<0){
+        $('importStatus').textContent='ستون‌های «نام کالا» و «قیمت» در فایل پیدا نشد. از فایل نمونه استفاده کن.';
+        return;
+      }
+      let added=0,skipped=0,invalid=0;
+      const existing=new Set(products.map(p=>(p.name||'').trim().toLocaleLowerCase()+'|'+(p.cat||'سایر').trim().toLocaleLowerCase()));
+      rows.forEach(cols=>{
+        const name=(cols[indexes.name]||'').trim();
+        const priceText=normalizeDigits(cols[indexes.price]);
+        const price=Number(priceText);
+        if(!name||!priceText||!Number.isFinite(price)||price<0){invalid++;return;}
+        const unit=indexes.unit>=0?(cols[indexes.unit]||'').trim()||'عدد':'عدد';
+        const cat=indexes.cat>=0?(cols[indexes.cat]||'').trim()||'سایر':'سایر';
+        const key=name.toLocaleLowerCase()+'|'+cat.toLocaleLowerCase();
+        if(existing.has(key)){skipped++;return;}
+        products.push({id:'csv_'+Date.now()+'_'+Math.random().toString(36).slice(2,9),name,price,retailPrice:Number(normalizeDigits(cols[indexes.retail]||0))||0,packQty:Number(normalizeDigits(cols[indexes.pack]||0))||0,cartonQty:Number(normalizeDigits(cols[indexes.carton]||0))||0,unit,cat,image:''});
+        existing.add(key);added++;
+      });
+      save();renderProducts();renderManage();
+      $('importStatus').textContent=`ورود گروهی تمام شد.\n${digits(added)} کالای جدید اضافه شد.\n${digits(skipped)} مورد تکراری رد شد.\n${digits(invalid)} ردیف نامعتبر رد شد.`;
+      if(added)alert(`${digits(added)} کالا با موفقیت اضافه شد.`);
+    }catch(err){$('importStatus').textContent='خواندن فایل با خطا مواجه شد. لطفاً فایل CSV با کدگذاری UTF-8 انتخاب کن.';}
+  };
+  reader.onerror=()=>{$('importStatus').textContent='فایل قابل خواندن نیست.';};
+  reader.readAsText(file,'UTF-8');
+}
+$('importFile').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  if(!/\.csv$/i.test(file.name)){alert('لطفاً فایل CSV انتخاب کن.');e.target.value='';return;}
+  $('importStatus').textContent='در حال خواندن فایل...';importCSV(file);e.target.value='';
+});
+$('search').addEventListener('input',renderProducts);
+updateCartBadge();renderProducts();
+</script>
+</body>
+</html>
